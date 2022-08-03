@@ -2,6 +2,7 @@ idf_component_register(
     SRCS "hardware.c"
          "wifi_connection.c"
          "wifi_connect.c"
+         "touchpad.c"
     INCLUDE_DIRS "." "include"
     REQUIRES
         "bus-i2c"
