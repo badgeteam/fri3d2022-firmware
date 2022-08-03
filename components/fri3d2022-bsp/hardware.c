@@ -4,8 +4,12 @@
 #include <driver/spi_master.h>
 #include <driver/i2c.h>
 #include <esp_log.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/queue.h>
 
 #include "managed_i2c.h"
+
+#include "touchpad.h"
 
 static const char* TAG = "hardware";
 
@@ -67,8 +71,6 @@ static esp_err_t _bus_init() {
         ESP_LOGE(TAG, "Initializing SPI bus failed");
         return res;
     }
-    
-    input_queue = xQueueCreate(8, sizeof(input_message_t));
 
     return ESP_OK;
 }
@@ -126,10 +128,14 @@ esp_err_t bsp_init() {
         ESP_LOGE(TAG, "Setting LCD backlight GPIO failed");
         return res;
     }
+    
+    input_queue = xQueueCreate(8, sizeof(input_message_t));
+    init_touch(input_queue);
 
     bsp_ready = true;
     
     ESP_LOGW(TAG, "--- BSP init done ---");
+    
     return ESP_OK;
 }
 

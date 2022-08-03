@@ -81,61 +81,6 @@ void stop() {
 const char* fatal_error_str = "A fatal error occured";
 const char* reset_board_str = "Reset the board to try again";
 
-static void audio_player_task(void* pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(300));
-    uint8_t leds[15] = {0};
-    for (uint8_t part = 0; part < 50; part++) {
-        // Center of the kite: green.
-        leds[3 * 0 + 1] = part;
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (uint8_t part = 0; part < 50; part++) {
-        // Left of the kite: red.
-        leds[3 * 1 + 0] = part;
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (uint8_t part = 0; part < 50; part++) {
-        // Top of the kit: blue.
-        leds[3 * 2 + 2] = part;
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (uint8_t part = 0; part < 50; part++) {
-        // Right of the kite: yellow.
-        leds[3 * 3 + 0] = part;
-        leds[3 * 3 + 1] = part;
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (uint8_t part = 0; part < 50; part++) {
-        // Bottom of the kite: blue.
-        leds[3 * 4 + 2] = part;
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-    for (uint8_t part = 0; part < 50; part++) {
-        // Center of the kite: green.
-        leds[3 * 0 + 1] = 49 - part;
-        // Left of the kite: red.
-        leds[3 * 1 + 0] = 49 - part;
-        // Top of the kit: blue.
-        leds[3 * 2 + 2] = 49 - part;
-        // Right of the kite: yellow.
-        leds[3 * 3 + 0] = 49 - part;
-        leds[3 * 3 + 1] = 49 - part;
-        // Bottom of the kite: blue.
-        leds[3 * 4 + 2] = 49 - part;
-
-        // Send the LED data.
-        ws2812_send_data(leds, sizeof(leds));
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-
-    vTaskDelete(NULL);
-}
-
 void app_main(void) {
     esp_err_t res;
 
