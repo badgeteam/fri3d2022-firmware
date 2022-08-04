@@ -1,6 +1,6 @@
-# MCH2022 ESP32 firmware: Launcher
+# fri3d2022 ESP32 firmware: Launcher
 
-This repository contains the ESP32 part of the firmware for the MCH2022 badge. This firmware allows for device testing, setup, OTA updates and of course launching apps.
+This repository contains the ESP32 part of the firmware for the fri3d2022 badge. This firmware allows for device testing, setup, OTA updates and of course launching apps.
 
 ## License
 
@@ -31,8 +31,8 @@ The [BadgePython logo](resources/icons/python.png) may only be used as icon for 
 
 ## How to build the firmware
 ```sh
-git clone --recursive https://github.com/badgeteam/mch2022-firmware-esp32
-cd mch2022-firmware-esp32
+git clone --recursive https://github.com/badgeteam/fri3d2022-firmware.git
+cd fri3d2022-firmware
 make prepare
 make build
 ```
@@ -47,10 +47,10 @@ make monitor
 In [`./tools`](./tools/) you will find command line tools to push files and apps to the badge etc., and a short manual on how to use them.
 
 ## Linux permissions
-Create `/etc/udev/rules.d/99-mch2022.rules` with the following contents:
+Create `/etc/udev/rules.d/99-fri3d2022.rules` with the following contents:
 
 ```
-SUBSYSTEM=="usb", ATTR{idVendor}=="16d0", ATTR{idProduct}=="0f9a", MODE="0666"
+SUBSYSTEM=="usb", ATTR{idVendor}=="10c4", ATTR{idProduct}=="ea60", MODE="0666"
 ```
 
 Then run the following commands to apply the new rule:
