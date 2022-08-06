@@ -14,7 +14,7 @@
 #define GPIO_UART_RX       3
 #define GPIO_BADGELINK     4
 #define GPIO_SPI_CS_LCD    5
-#define GPIO_LCD_BACKLIGHT 12
+//#define GPIO_LCD_BACKLIGHT 12
 #define GPIO_SPI_CLK       18
 #define GPIO_SPI_MISO      19
 #define GPIO_I2C_SDA       21
