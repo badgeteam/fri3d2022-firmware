@@ -109,11 +109,11 @@ esp_err_t bsp_init() {
     io_conf.pull_up_en = 0;
     gpio_config(&io_conf);
     
-    res = gpio_set_direction(GPIO_LCD_BACKLIGHT, GPIO_MODE_OUTPUT);
-    if (res != ESP_OK) {
-        ESP_LOGE(TAG, "Initializing LCD backlight GPIO failed");
-        return res;
-    }
+//    res = gpio_set_direction(GPIO_LCD_BACKLIGHT, GPIO_MODE_OUTPUT);
+//    if (res != ESP_OK) {
+//        ESP_LOGE(TAG, "Initializing LCD backlight GPIO failed");
+//        return res;
+//    }
 
     res = st7789v_init(&dev_st7789v);
     if (res != ESP_OK) {
@@ -123,11 +123,11 @@ esp_err_t bsp_init() {
     
     pax_buf_init(&pax_buffer, NULL, 240, 240, PAX_BUF_16_565RGB);
 
-    res = gpio_set_level(GPIO_LCD_BACKLIGHT, true);
-    if (res != ESP_OK) {
-        ESP_LOGE(TAG, "Setting LCD backlight GPIO failed");
-        return res;
-    }
+//    res = gpio_set_level(GPIO_LCD_BACKLIGHT, true);
+//    if (res != ESP_OK) {
+//        ESP_LOGE(TAG, "Setting LCD backlight GPIO failed");
+//        return res;
+//    }
     
     input_queue = xQueueCreate(8, sizeof(input_message_t));
     init_touch(input_queue);
