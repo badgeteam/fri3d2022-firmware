@@ -17,6 +17,7 @@ static const char *TAG = "Touch pad";
 #define TOUCHPAD_FILTER_TOUCH_PERIOD (10)
 
 static uint32_t touch_pads[TOUCH_PAD_AMOUNT] = {7, 6, 4};
+static bool s_pad_activated[TOUCH_PAD_AMOUNT];
 static uint8_t touch_pad_mapping[TOUCH_PAD_AMOUNT] = {INPUT_TOUCH0, INPUT_TOUCH1, INPUT_TOUCH2};
 
 static xQueueHandle queue = NULL;
@@ -36,11 +37,39 @@ static void rtc_intr(void *arg) {
     touch_pad_clear_status();
     for (int i = 0; i < TOUCH_PAD_AMOUNT; i++) {
         if ((pad_intr >> touch_pads[i]) & 0x01) {
-            input_message_t message;
-            message.input = touch_pad_mapping[i];
-            message.state = true;
-            xQueueSend(queue, &message, 0);
+            s_pad_activated[i] = true;
         }
+    }
+}
+
+/*
+  Check if any of touch pads has been activated
+  by reading a table updated by rtc_intr()
+  If so, then print it out on a serial monitor.
+  Clear related entry in the table afterwards
+  In interrupt mode, the table is updated in touch ISR.
+*/
+static void tp_example_read_task(void *pvParameter)
+{
+    while (1) {
+        for (int i = 0; i < TOUCH_PAD_AMOUNT; i++) {
+            if (s_pad_activated[i] == true) {
+                ESP_LOGI(TAG, "T%d activated!", i);
+
+                input_message_t message;
+                message.input = touch_pad_mapping[i];
+                message.state = true;
+                xQueueSend(queue, &message, 0);
+
+                // Wait a while for the pad being released
+                vTaskDelay(300 / portTICK_PERIOD_MS);
+                // Clear information on pad activation
+                s_pad_activated[i] = false;
+
+            }
+        }
+
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
 
@@ -58,4 +87,7 @@ void init_touch(xQueueHandle output_queue) {
     set_thresholds();
     touch_pad_isr_register(rtc_intr, NULL);
     touch_pad_intr_enable();
+
+    // Start a task to show what pads have been touched
+    xTaskCreate(&tp_example_read_task, "touch_pad_read_task", 4096, NULL, 5, NULL);
 }
